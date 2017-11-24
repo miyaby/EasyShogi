@@ -139,15 +139,18 @@ public class AnimalController : MonoBehaviour {
 			animal.transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
 		}
 
-		int takenAnimalCount = board.transform.childCount;
+//		Debug.Log ("B scale："+board.transform.lossyScale);
+//		Debug.Log ("takenAnimalCount："+takenAnimalCount);
 
-		Debug.Log ("B scale："+board.transform.lossyScale);
-		Debug.Log ("takenAnimalCount："+takenAnimalCount);
-//		Debug.Log ("board："+board.transform.lossyScale.x*((takenAnimalCount-2)/5));
-
-		//駒の親を手駒ボードに変更。位置も調整
+		//駒の親を手駒ボードに変更
 		animal.transform.parent = board.transform;
-		animal.transform.position = new Vector3 (-2+takenAnimalCount, board.transform.position.y, -1);
+
+		//手駒ボードを整理する
+		int pos = -2;
+		foreach (Transform takenAnimal in board.transform) {
+			takenAnimal.position = new Vector3 (pos, board.transform.position.y, -1);
+			pos++;
+		}
 	}
 }
 
