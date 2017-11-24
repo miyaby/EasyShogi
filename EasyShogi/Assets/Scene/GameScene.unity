@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 27452929}
   - component: {fileID: 27452928}
   m_Layer: 0
-  m_Name: PlayerTakenBorad
+  m_Name: UnderTakenBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1179,7 +1179,7 @@ GameObject:
   - component: {fileID: 905309744}
   - component: {fileID: 905309743}
   m_Layer: 0
-  m_Name: EnemyTakenBorad
+  m_Name: UpperTakenBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

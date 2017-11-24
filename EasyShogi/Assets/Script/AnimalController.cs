@@ -5,7 +5,6 @@ using UnityEngine;
 public class AnimalController : MonoBehaviour {
 
 	Vector3 oriPositon;
-
 	GameObject director;
 
 	// Use this for initialization
@@ -85,8 +84,7 @@ public class AnimalController : MonoBehaviour {
 //				foreach (GameObject animal in tile) {
 //
 				if(GameObjectExtensions.HasChild(tile)){
-				GameObject animal = tile.transform.GetChild(0).gameObject;
-//				if(animal!=null){
+					GameObject animal = tile.transform.GetChild(0).gameObject;
 
 //					Debug.Log ("animal");
 //					Debug.Log ("animal rotation"+animal.transform.localRotation);
@@ -94,11 +92,18 @@ public class AnimalController : MonoBehaviour {
 					Debug.Log ("turn"+GameController.underPlayerTurn);
 
 					//置いた先の動物が置いたプレイヤーのものなら、もとの位置に戻して終了
-					if ((animal.transform.localRotation.eulerAngles.y == 180 && GameController.underPlayerTurn) || //先手が先手に
-						(animal.transform.localRotation.eulerAngles.y == 0 && !GameController.underPlayerTurn)) {//後手が後手に
+					if ((underPlayerAnimal(animal) && GameController.underPlayerTurn) || //先手が先手に
+						(!underPlayerAnimal(animal) && !GameController.underPlayerTurn)) {//後手が後手に
 						Debug.Log ("own animal");
 						this.transform.position = oriPositon;
 						return;
+					}
+
+					//置いた先の動物が相手プレイヤーのものなら、手駒にする
+					if ((!underPlayerAnimal(animal) && GameController.underPlayerTurn) || //先手が後手に
+						(underPlayerAnimal(animal) && !GameController.underPlayerTurn)) {//後手が先手に
+						Debug.Log ("enemy animal");
+						takeAnimal (animal);
 					}
 				}
 
@@ -117,9 +122,32 @@ public class AnimalController : MonoBehaviour {
 		this.transform.position = oriPositon;
 	}
 
-	//画面下のプレイヤーの駒
+	//プレイヤー(画面下)の駒かどうか
 	bool underPlayerAnimal(GameObject animal){
 		return (animal.transform.localRotation.eulerAngles.y == 180);
+	}
+
+	//駒をターン中プレイヤーの手駒にする
+	void takeAnimal(GameObject animal){
+
+		GameObject board;
+		if (GameController.underPlayerTurn) {
+			board = GameObject.Find ("UnderTakenBoard");
+			animal.transform.rotation = Quaternion.Euler (new Vector3 (0, 180, 0));
+		} else {
+			board = GameObject.Find ("UpperTakenBoard");
+			animal.transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
+		}
+
+		int takenAnimalCount = board.transform.childCount;
+
+		Debug.Log ("B scale："+board.transform.lossyScale);
+		Debug.Log ("takenAnimalCount："+takenAnimalCount);
+//		Debug.Log ("board："+board.transform.lossyScale.x*((takenAnimalCount-2)/5));
+
+		//駒の親を手駒ボードに変更。位置も調整
+		animal.transform.parent = board.transform;
+		animal.transform.position = new Vector3 (-2+takenAnimalCount, board.transform.position.y, -1);
 	}
 }
 
