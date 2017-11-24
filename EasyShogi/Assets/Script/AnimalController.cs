@@ -88,6 +88,19 @@ public class AnimalController : MonoBehaviour {
 					return;
 				}
 
+				//遷移前・遷移先の差分が、現在持っている駒の移動可能先にあるかどうか
+				bool reachable = false;
+				foreach (KeyValuePair<int, int> pair in reachableArea(this.name)) {
+					if (pair.Key == move (this.transform.parent.gameObject,tile).Key &&
+						pair.Value == move (this.transform.parent.gameObject,tile).Value)
+						reachable = true;
+				}
+				//なかったら終わり
+				if (!reachable) {
+					this.transform.position = oriPositon;
+					return;
+				}
+
 				//置いた先に駒がある
 				if(GameObjectExtensions.HasChild(tile)){
 
@@ -100,7 +113,6 @@ public class AnimalController : MonoBehaviour {
 						
 					GameObject animal = tile.transform.GetChild(0).gameObject;
 
-//					Debug.Log ("animal");
 //					Debug.Log ("animal rotation"+animal.transform.localRotation);
 					Debug.Log ("animal rotation"+animal.transform.localRotation.eulerAngles);
 					Debug.Log ("turn"+GameController.underPlayerTurn);
@@ -165,6 +177,67 @@ public class AnimalController : MonoBehaviour {
 			takenAnimal.position = new Vector3 (pos, board.transform.position.y, -1);
 			pos++;
 		}
+	}
+
+	//２つのタイルから駒の移動を返す
+	KeyValuePair<int,int> move(GameObject fromTile,GameObject toTile){
+
+		int fromX = int.Parse(fromTile.name.Substring (4,1));
+		int fromY = int.Parse(fromTile.name.Substring (5,1));
+		int toX = int.Parse(toTile.name.Substring (4,1));
+		int toY = int.Parse(toTile.name.Substring (5,1));
+
+		int disX = fromX - toX;
+		int disY = fromY - toY;
+
+		return new KeyValuePair<int, int> (disX, disY);
+	}
+
+	//駒の行き先を返す
+	List<KeyValuePair<int,int>> reachableArea(string animalName){
+
+		switch (animalName) {
+		case "chick":
+			return new List<KeyValuePair<int, int>>{
+				new KeyValuePair<int, int>(0,1)
+			};
+		case "chicken":
+			return new List<KeyValuePair<int, int>>{
+				new KeyValuePair<int, int>(-1,1),
+				new KeyValuePair<int, int>(0,1),
+				new KeyValuePair<int, int>(1,1),
+				new KeyValuePair<int, int>(-1,0),
+				new KeyValuePair<int, int>(1,0),
+				new KeyValuePair<int, int>(0,-1)
+			};
+		case "giraffe":
+			return new List<KeyValuePair<int, int>>{
+				new KeyValuePair<int, int>(0,1),
+				new KeyValuePair<int, int>(-1,0),
+				new KeyValuePair<int, int>(1,0),
+				new KeyValuePair<int, int>(0,-1)
+			};
+		case "elephant":
+			return new List<KeyValuePair<int, int>>{
+				new KeyValuePair<int, int>(-1,1),
+				new KeyValuePair<int, int>(1,1),
+				new KeyValuePair<int, int>(-1,-1),
+				new KeyValuePair<int, int>(1,-1)
+			};
+		case "lion":
+			return new List<KeyValuePair<int, int>>{
+				new KeyValuePair<int, int>(-1,1),
+				new KeyValuePair<int, int>(0,1),
+				new KeyValuePair<int, int>(1,1),
+				new KeyValuePair<int, int>(-1,1),
+				new KeyValuePair<int, int>(1,0),
+				new KeyValuePair<int, int>(-1,-1),
+				new KeyValuePair<int, int>(0,-1),
+				new KeyValuePair<int, int>(1,-1)
+			};
+		}
+
+		return new List<KeyValuePair<int, int>>{ };
 	}
 }
 
