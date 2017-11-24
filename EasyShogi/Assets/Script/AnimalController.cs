@@ -7,6 +7,8 @@ public class AnimalController : MonoBehaviour {
 	Vector3 oriPositon;
 	GameObject director;
 
+	bool dragTakenAnimal = false;
+
 	// Use this for initialization
 	void Start () {
 		director = GameObject.Find ("GameDirector");
@@ -25,6 +27,10 @@ public class AnimalController : MonoBehaviour {
 		
 		Debug.Log ("OnMouseDown");
 		oriPositon = this.transform.position;
+
+//		Debug.Log ("NAME:"+transform.root.gameObject.name);
+		//手駒をドラッグ
+		dragTakenAnimal = (transform.root.gameObject.name == "TakenBorad");
 	}
 
 	void OnMouseDrag()
@@ -75,15 +81,23 @@ public class AnimalController : MonoBehaviour {
 				mousePointInWorld.y > tile.transform.position.y - tile.transform.lossyScale.y / 2 &&
 				mousePointInWorld.y < tile.transform.position.y + tile.transform.lossyScale.y / 2) {
 
+				//移動前と移動先が同じ
 				if (tile.name == this.transform.parent.name) {
 					Debug.Log ("同じタイルを選択");
 					this.transform.position = oriPositon;
 					return;
 				}
 
-//				foreach (GameObject animal in tile) {
-//
+				//置いた先に駒がある
 				if(GameObjectExtensions.HasChild(tile)){
+
+					//手駒から出している時は、駒があるタイルには置けない
+					if (dragTakenAnimal) {
+						Debug.Log ("手駒から出している時は、駒があるタイルには置けない");
+						this.transform.position = oriPositon;
+						return;
+					}
+						
 					GameObject animal = tile.transform.GetChild(0).gameObject;
 
 //					Debug.Log ("animal");
