@@ -6,9 +6,11 @@ public class AnimalController : MonoBehaviour {
 
 	Vector3 oriPositon;
 
+	GameObject director;
+
 	// Use this for initialization
 	void Start () {
-		
+		director = GameObject.Find ("GameDirector");
 	}
 	
 	// Update is called once per frame
@@ -106,7 +108,7 @@ public class AnimalController : MonoBehaviour {
 
 				//ターン変更
 				GameController.underPlayerTurn = !GameController.underPlayerTurn;
-
+				director.GetComponent<GameController> ().updateTurnText ();
 
 				return;
 			}

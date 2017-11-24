@@ -8,7 +8,9 @@ public class GameController : MonoBehaviour {
 	public static bool underPlayerTurn = true;
 
 	[SerializeField]
-	GameObject turnText;
+	GameObject underTurnText;
+	[SerializeField]
+	GameObject upperTurnText;
 
 	// Use this for initialization
 	void Start () {
@@ -25,10 +27,14 @@ public class GameController : MonoBehaviour {
 		Debug.Log ("OnMouseDown");
 	}
 
-	void updateTurnText()
+	public void updateTurnText()
 	{
-		Vector3 textPos = turnText.GetComponent<Text> ().transform.position;
-		textPos.y = textPos.y * -1;
-		turnText.GetComponent<Text> ().transform.position = textPos;
+		if (underPlayerTurn) {
+			underTurnText.SetActive(true);
+			upperTurnText.SetActive(false);
+		} else {
+			underTurnText.SetActive(false);
+			upperTurnText.SetActive(true);
+		}
 	}
 }
