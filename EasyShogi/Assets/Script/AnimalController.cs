@@ -92,13 +92,20 @@ public class AnimalController : MonoBehaviour {
 				if (!dragTakenAnimal) {
 					bool reachable = false;
 					foreach (KeyValuePair<int, int> pair in reachableArea(this.name)) {
-						if (pair.Key == move (this.transform.parent.gameObject,tile).Key &&
-							pair.Value == move (this.transform.parent.gameObject,tile).Value)
+
+						//画面上プレイヤーの場合、進行方向は逆
+						int dir = 1;
+						if(!GameController.underPlayerTurn)
+							dir = -1;
+							
+						if (pair.Key*dir == move (this.transform.parent.gameObject,tile).Key &&
+							pair.Value*dir == move (this.transform.parent.gameObject,tile).Value)
 							reachable = true;
 					}
 					//なかったら終わり
 					if (!reachable) {
 						this.transform.position = oriPositon;
+						Debug.Log ("選択中の駒が到達不可能なタイルです");
 						return;
 					}
 				}
