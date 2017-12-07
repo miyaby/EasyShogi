@@ -89,16 +89,18 @@ public class AnimalController : MonoBehaviour {
 				}
 
 				//遷移前・遷移先の差分が、現在持っている駒の移動可能先にあるかどうか
-				bool reachable = false;
-				foreach (KeyValuePair<int, int> pair in reachableArea(this.name)) {
-					if (pair.Key == move (this.transform.parent.gameObject,tile).Key &&
-						pair.Value == move (this.transform.parent.gameObject,tile).Value)
-						reachable = true;
-				}
-				//なかったら終わり
-				if (!reachable) {
-					this.transform.position = oriPositon;
-					return;
+				if (!dragTakenAnimal) {
+					bool reachable = false;
+					foreach (KeyValuePair<int, int> pair in reachableArea(this.name)) {
+						if (pair.Key == move (this.transform.parent.gameObject,tile).Key &&
+							pair.Value == move (this.transform.parent.gameObject,tile).Value)
+							reachable = true;
+					}
+					//なかったら終わり
+					if (!reachable) {
+						this.transform.position = oriPositon;
+						return;
+					}
 				}
 
 				//置いた先に駒がある
