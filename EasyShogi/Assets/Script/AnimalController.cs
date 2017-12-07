@@ -140,6 +140,9 @@ public class AnimalController : MonoBehaviour {
 						Debug.Log ("enemy animal");
 						takeAnimal (animal);
 						powerDownAnimal (animal);
+
+						if (animal.name == "lion")
+							Debug.Log ("ゲーム終了");
 					}
 				}
 
@@ -159,6 +162,9 @@ public class AnimalController : MonoBehaviour {
 					int y = int.Parse (tile.name.Substring (5, 1));
 					if ((GameController.underPlayerTurn && y == 4) || (!GameController.underPlayerTurn && y == 1)) {
 						powerUpAnimal ();
+
+						if (this.name == "lion")
+							Debug.Log ("ゲーム終了");
 					}
 				}
 
