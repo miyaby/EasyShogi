@@ -139,6 +139,7 @@ public class AnimalController : MonoBehaviour {
 						(underPlayerAnimal(animal) && !GameController.underPlayerTurn)) {//後手が先手に
 						Debug.Log ("enemy animal");
 						takeAnimal (animal);
+						powerDownAnimal (animal);
 					}
 				}
 
@@ -149,6 +150,17 @@ public class AnimalController : MonoBehaviour {
 				//ターン変更
 				GameController.underPlayerTurn = !GameController.underPlayerTurn;
 				director.GetComponent<GameController> ().updateTurnText ();
+
+				//ターンが正しく完了した
+				Debug.Log ("ターン終了");
+
+				//手駒からではなく、最終列に到達した
+				if (!dragTakenAnimal) {
+					int y = int.Parse (tile.name.Substring (5, 1));
+					if ((GameController.underPlayerTurn && y == 4) || (!GameController.underPlayerTurn && y == 1)) {
+						powerUpAnimal ();
+					}
+				}
 
 				return;
 			}
@@ -247,6 +259,28 @@ public class AnimalController : MonoBehaviour {
 		}
 
 		return new List<KeyValuePair<int, int>>{ };
+	}
+
+	//動物がパワーアップする
+	void powerUpAnimal(){
+		
+		switch (this.name) {
+		case "chick":
+			this.name = "chicken";
+			GetComponent<Renderer> ().material = director.GetComponent<GameController> ().chickenMat;
+			return;
+		}
+	}
+
+	//動物がパワーダウンする
+	void powerDownAnimal(GameObject animal){
+
+		switch (animal.name) {
+		case "chicken":
+			animal.name = "chick";
+			animal.GetComponent<Renderer> ().material = director.GetComponent<GameController> ().chickMat;
+			return;
+		}
 	}
 }
 

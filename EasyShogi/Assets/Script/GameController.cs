@@ -12,6 +12,9 @@ public class GameController : MonoBehaviour {
 	[SerializeField]
 	GameObject upperTurnText;
 
+	public Material chickMat;
+	public Material chickenMat;
+
 	// Use this for initialization
 	void Start () {
 		
