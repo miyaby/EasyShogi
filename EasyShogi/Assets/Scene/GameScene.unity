@@ -629,6 +629,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   underTurnText: {fileID: 1709696482}
   upperTurnText: {fileID: 1149193636}
+  chickMat: {fileID: 2100000, guid: 7716724571be34dfdbb299daec927b25, type: 2}
+  chickenMat: {fileID: 2100000, guid: 5ba7f594ff53e416eb982f72f20b5c47, type: 2}
 --- !u!4 &353424209
 Transform:
   m_ObjectHideFlags: 0
