@@ -21,6 +21,10 @@ public class AnimalController : MonoBehaviour {
 
 	void OnMouseDown()
 	{
+		//ゲームが終了している
+		if(GameController.finished)
+			return;
+
 		//自分の駒でないなら終わり
 		if (GameController.underPlayerTurn != underPlayerAnimal (this.gameObject))
 			return;
@@ -35,6 +39,10 @@ public class AnimalController : MonoBehaviour {
 
 	void OnMouseDrag()
 	{
+		//ゲームが終了している
+		if(GameController.finished)
+			return;
+
 		//自分の駒でないなら終わり
 		if (GameController.underPlayerTurn != underPlayerAnimal (this.gameObject))
 			return;
@@ -54,6 +62,10 @@ public class AnimalController : MonoBehaviour {
 
 	void OnMouseUp()
 	{
+		//ゲームが終了している
+		if(GameController.finished)
+			return;
+
 		//自分の駒でないなら終わり
 		if (GameController.underPlayerTurn != underPlayerAnimal (this.gameObject))
 			return;
@@ -141,8 +153,10 @@ public class AnimalController : MonoBehaviour {
 						takeAnimal (animal);
 						powerDownAnimal (animal);
 
-						if (animal.name == "lion")
-							Debug.Log ("ゲーム終了");
+						if (animal.name == "lion"){
+							director.GetComponent<GameController> ().finishGame ();
+							return;
+						}
 					}
 				}
 
@@ -150,23 +164,25 @@ public class AnimalController : MonoBehaviour {
 				this.transform.parent = tile.transform;
 				this.transform.position = new Vector3(tile.transform.position.x,tile.transform.position.y,-1);
 
+				//手駒からではなく、最終列に到達した
+				if (!dragTakenAnimal) {
+					int y = int.Parse (tile.name.Substring (5, 1));
+					if ((!GameController.underPlayerTurn && y == 4) || (GameController.underPlayerTurn && y == 1)) {
+						powerUpAnimal ();
+
+						if (this.name == "lion"){
+							director.GetComponent<GameController> ().finishGame ();
+							return;
+						}
+					}
+				}
+
 				//ターン変更
 				GameController.underPlayerTurn = !GameController.underPlayerTurn;
 				director.GetComponent<GameController> ().updateTurnText ();
 
 				//ターンが正しく完了した
 				Debug.Log ("ターン終了");
-
-				//手駒からではなく、最終列に到達した
-				if (!dragTakenAnimal) {
-					int y = int.Parse (tile.name.Substring (5, 1));
-					if ((GameController.underPlayerTurn && y == 4) || (!GameController.underPlayerTurn && y == 1)) {
-						powerUpAnimal ();
-
-						if (this.name == "lion")
-							Debug.Log ("ゲーム終了");
-					}
-				}
 
 				return;
 			}
@@ -256,7 +272,7 @@ public class AnimalController : MonoBehaviour {
 				new KeyValuePair<int, int>(-1,1),
 				new KeyValuePair<int, int>(0,1),
 				new KeyValuePair<int, int>(1,1),
-				new KeyValuePair<int, int>(-1,1),
+				new KeyValuePair<int, int>(-1,0),
 				new KeyValuePair<int, int>(1,0),
 				new KeyValuePair<int, int>(-1,-1),
 				new KeyValuePair<int, int>(0,-1),
